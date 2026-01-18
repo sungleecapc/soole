@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/sections/Footer";
-import { getPostBySlug, type Post } from "@/lib/firestore/posts";
+import { getPostBySlugAdmin as getPostBySlug } from "@/lib/firestore/posts-admin";
+import type { Post } from "@/lib/firestore/posts";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";

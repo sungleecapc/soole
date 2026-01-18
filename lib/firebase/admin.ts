@@ -22,6 +22,16 @@ if (getApps().length === 0) {
       }),
       storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     });
+  } else {
+    // Fallback to Application Default Credentials (ADC) for App Hosting / Cloud Run
+    try {
+      adminApp = initializeApp({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      });
+    } catch (error) {
+      console.error("Firebase Admin initialization failed (ADC):", error);
+    }
   }
 } else {
   adminApp = getApp();

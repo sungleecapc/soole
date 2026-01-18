@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/sections/Footer";
-import { getPublishedPosts, type Post } from "@/lib/firestore/posts";
+import { getPublishedPostsAdmin as getPublishedPosts } from "@/lib/firestore/posts-admin";
+import type { Post } from "@/lib/firestore/posts";
 import { Link } from "lucide-react";
 import NextLink from "next/link";
 import { format } from "date-fns";
