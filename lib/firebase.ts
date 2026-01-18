@@ -6,7 +6,7 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey:
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
-    "AIzaSyDOCAbCDeFGHijklmnOPQRStuvwxyz01234",
+    "AIzaSyDOCAbCDeFGHijklmnOPQRStuvwxyz01234", // Valid-format mock key for build
   authDomain:
     process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ||
     "mock-project.firebaseapp.com",
