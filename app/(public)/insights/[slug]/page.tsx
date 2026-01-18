@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/sections/Footer";
-import { getPostBySlug } from "@/lib/firestore/posts";
+import { getPostBySlug, type Post } from "@/lib/firestore/posts";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -18,9 +18,9 @@ export const revalidate = 60;
 export default async function InsightDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params; // Next.js 15 requires awaiting params
+  const { slug } = await params;
   const post = await getPostBySlug(slug);
 
   if (!post) {
@@ -39,10 +39,7 @@ export default async function InsightDetailPage({
             {post.publishedAt && <span>•</span>}
             {post.publishedAt && (
               <span>
-                {format(
-                  new Date(post.publishedAt.seconds * 1000),
-                  "MMMM d, yyyy",
-                )}
+                {format(new Date(post.publishedAt.toDate()), "MMMM d, yyyy")}
               </span>
             )}
           </div>
@@ -58,7 +55,7 @@ export default async function InsightDetailPage({
 
         {/* Cover Image */}
         {post.coverImageUrl && (
-          <div className="relative w-full max-w-5xl mx-auto aspect-[21/9] rounded-xl overflow-hidden mb-16 bg-stone-200 dark:bg-stone-900 shadow-xl">
+          <div className="relative w-full max-w-5xl mx-auto aspect-21/9 rounded-xl overflow-hidden mb-16 bg-stone-200 dark:bg-stone-900 shadow-xl">
             <Image
               src={post.coverImageUrl}
               alt={post.title}
