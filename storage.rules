@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Covers
+    // Admin uploads directly from client (CoverUploader.tsx), so we NEED write permission here.
+    // We restrict to authenticated users.
+    match /covers/{folder}/{imageId} {
+      allow read: if true; // Public can see covers
+      allow write: if request.auth != null 
+                   && (folder == "posts" || folder == "rankings")
+                   && request.resource.size < 5 * 1024 * 1024 // 5MB limit
+                   && request.resource.contentType.matches('image/.*');
+    }
+    
+    // Default deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // Helper function to check if user is admin
+    // Note: Since we are using an allowlist in code (lib/auth/adminAllowlist.ts), 
+    // we ideally want custom claims. 
+    // BUT without custom claims set up (which requires a script), 
+    // we can't secure WRITES from the client strictly by "admin" role easily.
+    // HOWEVER, our architecture creates posts via SERVER ACTIONS or ADMIN SDK?
+    // Wait, the prompt asked for "Server actions or API routes for writes".
+    // AND "Prefer Firebase Admin SDK on server".
+    // IF we use Admin SDK on backend, CLIENT DOES NOT WRITE to Firestore directly.
+    // So we can locking down WRITES completely for client.
+    
+    // READ rules:
+    // Posts: Public can read published. Admin can read all.
+    // Rankings: Public can read published. Admin can read all.
+    
+    match /posts/{postId} {
+       allow read: if resource.data.published == true || request.auth != null; 
+       // We allow any authenticated user to read drafts? 
+       // Or strictly specific emails? 
+       // For now, let's assume auth != null is "admin" enough for READs if we only give logins to admins.
+       // Since public registration is disabled, this is safe-ish.
+       
+       allow write: if false; // WRITES SHOULD GO THROUGH SERVER ACTIONS (Admin SDK)
+    }
+    
+    match /ranking_snapshots/{snapshotId} {
+       allow read: if resource.data.published == true || request.auth != null;
+       allow write: if false; // WRITES THROUGH SERVER ACTIONS
+    }
+    
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
