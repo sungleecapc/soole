@@ -15,6 +15,10 @@ import ReactMarkdown from "react-markdown"; // We might need to install this or 
 
 export const revalidate = 60;
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function InsightDetailPage({
   params,
 }: {

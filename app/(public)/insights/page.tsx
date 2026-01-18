@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/sections/Footer";
-import { getPublishedPosts } from "@/lib/firestore/posts";
+import { getPublishedPosts, type Post } from "@/lib/firestore/posts";
 import { Link } from "lucide-react";
 import NextLink from "next/link";
 import { format } from "date-fns";
@@ -9,7 +9,13 @@ import Image from "next/image";
 export const revalidate = 60; // ISR everyone 60 seconds
 
 export default async function InsightsPage() {
-  const posts = await getPublishedPosts();
+  let posts: Post[] = [];
+  try {
+    posts = await getPublishedPosts();
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+    posts = [];
+  }
 
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950 font-sans text-stone-900 dark:text-stone-100 selection:bg-stone-200 dark:selection:bg-stone-800">
@@ -37,7 +43,7 @@ export default async function InsightsPage() {
                   className="block space-y-4"
                 >
                   {post.coverImageUrl && (
-                    <div className="relative aspect-[21/9] w-full overflow-hidden rounded-md bg-stone-200 dark:bg-stone-900">
+                    <div className="relative aspect-21/9 w-full overflow-hidden rounded-md bg-stone-200 dark:bg-stone-900">
                       <Image
                         src={post.coverImageUrl}
                         alt={post.title}
