@@ -57,24 +57,20 @@ export function RankingForm({ initialData }: RankingFormProps) {
 
   const form = useForm<RankingSnapshotFormData>({
     resolver: zodResolver(rankingSnapshotSchema),
-    defaultValues: initialData
-      ? {
-          ...initialData,
-          published: !!initialData.published,
-        }
-      : {
-          title: "",
-          slug: "",
-          source: "",
-          category: "",
-          capturedAt: new Date().toISOString().split("T")[0],
-          summary: "",
-          coverImageUrl: "",
-          published: false,
-          items: [
-            { rank: 1, brand: "", productName: "", productUrl: "", notes: "" },
-          ],
-        },
+    defaultValues: {
+      title: initialData?.title ?? "",
+      slug: initialData?.slug ?? "",
+      source: initialData?.source ?? "",
+      category: initialData?.category ?? "",
+      capturedAt:
+        initialData?.capturedAt ?? new Date().toISOString().split("T")[0],
+      summary: initialData?.summary ?? "",
+      coverImageUrl: initialData?.coverImageUrl ?? "",
+      published: initialData?.published ?? false,
+      items: initialData?.items ?? [
+        { rank: 1, brand: "", productName: "", productUrl: "", notes: "" },
+      ],
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -263,7 +259,13 @@ export function RankingForm({ initialData }: RankingFormProps) {
                             <FormItem className="w-20">
                               <FormLabel className="text-xs">Rank</FormLabel>
                               <FormControl>
-                                <Input type="number" {...field} />
+                                <Input
+                                  type="number"
+                                  {...field}
+                                  onChange={(e) =>
+                                    field.onChange(e.target.valueAsNumber)
+                                  }
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

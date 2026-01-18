@@ -24,7 +24,7 @@ export const postSchema = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("")),
-  published: z.boolean().default(false),
+  published: z.boolean(),
 });
 
 export type PostFormData = z.infer<typeof postSchema>;
@@ -32,7 +32,7 @@ export type PostFormData = z.infer<typeof postSchema>;
 // --- Ranking Schema ---
 
 export const rankingItemSchema = z.object({
-  rank: z.coerce.number().min(1, "Rank must be at least 1"),
+  rank: z.number().min(1, "Rank must be at least 1"),
   brand: z.string().min(1, "Brand is required"),
   productName: z.string().min(1, "Product Name is required"),
   productUrl: z
@@ -64,7 +64,7 @@ export const rankingSnapshotSchema = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("")),
-  published: z.boolean().default(false),
+  published: z.boolean(),
 });
 
 export type RankingSnapshotFormData = z.infer<typeof rankingSnapshotSchema>;

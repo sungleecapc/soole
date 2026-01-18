@@ -40,23 +40,16 @@ export function PostForm({ initialData }: PostFormProps) {
 
   const form = useForm<PostFormData>({
     resolver: zodResolver(postSchema),
-    defaultValues: initialData
-      ? {
-          ...initialData,
-          // Ensure explicit default values if fields missing
-          youtubeUrl: initialData.youtubeUrl || "",
-          published: !!initialData.published,
-        }
-      : {
-          title: "",
-          slug: "",
-          subtitle: "",
-          content: "",
-          tags: "",
-          coverImageUrl: "",
-          youtubeUrl: "",
-          published: false,
-        },
+    defaultValues: {
+      title: initialData?.title ?? "",
+      slug: initialData?.slug ?? "",
+      subtitle: initialData?.subtitle ?? "",
+      content: initialData?.content ?? "",
+      tags: initialData?.tags ?? "",
+      coverImageUrl: initialData?.coverImageUrl ?? "",
+      youtubeUrl: initialData?.youtubeUrl ?? "",
+      published: (initialData?.published as boolean) ?? false,
+    } as PostFormData,
   });
 
   const slugValue = form.watch("slug");
